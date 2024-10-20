@@ -1,7 +1,6 @@
 """Platform for sensor integration."""
 
 import logging
-from typing import Any
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -195,11 +194,6 @@ class WiggleBinSensor(SensorEntity):
     def native_value(self) -> str:
         """Return the state of the sensor."""
         return self.coordinator.data.get(self._group, {}).get(self._attribute)
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any]:
-        """Return the state attributes."""
-        return self.coordinator.data
 
     @property
     def unique_id(self) -> str:
