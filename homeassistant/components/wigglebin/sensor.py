@@ -28,112 +28,135 @@ async def async_setup_entry(
             coordinator,
             f"{entry.entry_id}_temperature",
             f"{entry.title} Temperature",
+            "environment",
             "temperature",
             SensorDeviceClass.TEMPERATURE,
+            "°C",
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_humidity",
             f"{entry.title} Humidity",
+            "environment",
             "humidity",
             SensorDeviceClass.HUMIDITY,
+            "%",
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_pressure",
             f"{entry.title} Pressure",
+            "environment",
             "pressure",
             SensorDeviceClass.PRESSURE,
+            "hPa",
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_soil_temperature",
             f"{entry.title} Soil Temperature",
-            "soil_temperature",
+            "soil",
+            "temperature",
             SensorDeviceClass.TEMPERATURE,
-        ),
-        WiggleBinSensor(
-            coordinator,
-            f"{entry.entry_id}_soil_moisture",
-            f"{entry.title} Soil Moisture",
-            "soil_moisture",
-            SensorDeviceClass.MOISTURE,
+            "°C",
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_soil_adc",
             f"{entry.title} Soil ADC",
-            "soil_adc",
-            SensorDeviceClass.MOISTURE,
+            "soil_moisture",
+            "adc",
+            None,
+            None,
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_image_mean_gray",
             f"{entry.title} Image Mean Gray",
-            "image_mean_gray",
-            SensorDeviceClass.ILLUMINANCE,
+            "image",
+            "mean_gray",
+            None,
+            None,
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_image_pixels_darker",
             f"{entry.title} Image Pixels Shifted To Dark",
-            "image_pixels_darker",
-            SensorDeviceClass.ILLUMINANCE,
+            "image",
+            "count_pixels_darker",
+            None,
+            None,
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_image_pixels_lighter",
             f"{entry.title} Image Pixels Shifted To Light",
-            "image_pixels_lighter",
-            SensorDeviceClass.ILLUMINANCE,
+            "image",
+            "count_pixels_darker",
+            None,
+            None,
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_worm_count",
             f"{entry.title} Worm Count",
+            "image",
             "worm_count",
+            None,
             None,
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_fly_count",
             f"{entry.title} Fly Count",
-            "fly_count",
+            "image",
+            "detection_class_fly_count",
+            None,
             None,
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_fly_larva_count",
             f"{entry.title} Fly Larva Count",
-            "fly_larva_count",
+            "image",
+            "detection_class_fly_larva_count",
+            None,
             None,
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_detection_confidence_avg",
             f"{entry.title} Detection Confidence Average",
+            "image",
             "detection_confidence_avg",
+            None,
             None,
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_detection_confidence_min",
             f"{entry.title} Detection Confidence Min",
+            "image",
             "detection_confidence_min",
+            None,
             None,
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_detection_confidence_max",
             f"{entry.title} Detection Confidence Max",
+            "image",
             "detection_confidence_max",
+            None,
             None,
         ),
         WiggleBinSensor(
             coordinator,
             f"{entry.entry_id}_detection_count",
             f"{entry.title} Detection Count",
+            "image",
             "detection_count",
+            None,
             None,
         ),
     ]
@@ -149,15 +172,19 @@ class WiggleBinSensor(SensorEntity):
         coordinator,
         sensor_id,
         name,
+        group,
         attribute,
         device_class: SensorDeviceClass | None,
+        unit_of_measurement: str | None,
     ) -> None:
         """Initialize the sensor."""
         self.coordinator = coordinator
         self._sensor_id = sensor_id
         self._name = name
+        self._group = group
         self._attribute = attribute
         self._device_class = device_class
+        self._unit_of_measurement = unit_of_measurement
 
     @property
     def name(self) -> str:
@@ -167,7 +194,7 @@ class WiggleBinSensor(SensorEntity):
     @property
     def native_value(self) -> str:
         """Return the state of the sensor."""
-        return self.coordinator.data.get("environment", {}).get(self._attribute)
+        return self.coordinator.data.get(self._group, {}).get(self._attribute)
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
@@ -198,6 +225,11 @@ class WiggleBinSensor(SensorEntity):
     def state_class(self) -> SensorStateClass:
         """Return the state class of the sensor."""
         return SensorStateClass.MEASUREMENT
+
+    @property
+    def native_unit_of_measurement(self) -> str | None:
+        """Return the unit of measurement of the sensor."""
+        return self._unit_of_measurement
 
     async def async_update(self) -> None:
         """Update the sensor."""
