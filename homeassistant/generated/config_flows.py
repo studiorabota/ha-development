@@ -666,6 +666,7 @@ FLOWS = {
         "whirlpool",
         "whois",
         "wiffi",
+        "wigglebin",
         "wilight",
         "withings",
         "wiz",

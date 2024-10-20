@@ -6924,6 +6924,12 @@
       "config_flow": true,
       "iot_class": "local_push"
     },
+    "wigglebin": {
+      "name": "WiggleBin",
+      "integration_type": "device",
+      "config_flow": true,
+      "iot_class": "local_polling"
+    },
     "wilight": {
       "name": "WiLight",
       "integration_type": "hub",
