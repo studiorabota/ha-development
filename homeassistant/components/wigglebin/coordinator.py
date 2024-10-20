@@ -19,7 +19,7 @@ def raise_update_failed(response):
 class WiggleBinDataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching WiggleBin data."""
 
-    def __init__(self, hass: HomeAssistant) -> None:
+    def __init__(self, hass: HomeAssistant, api_url) -> None:
         """Initialize."""
         super().__init__(
             hass,
@@ -27,13 +27,14 @@ class WiggleBinDataUpdateCoordinator(DataUpdateCoordinator):
             name="WiggleBin",
             update_interval=timedelta(minutes=1),
         )
+        self.api_url = api_url
 
     async def _async_update_data(self):
         """Fetch data from API."""
         try:
             async with (
                 aiohttp.ClientSession() as session,
-                session.get("http://wigglebin.local:5000/sensors/") as response,
+                session.get(f"{self.api_url}/sensors/") as response,
             ):
                 if response.status != 200:
                     raise_update_failed(response)

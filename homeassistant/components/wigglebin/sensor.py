@@ -26,15 +26,15 @@ async def async_setup_entry(
     sensors = [
         WiggleBinSensor(
             coordinator,
-            "wigglebin_temperature",
-            "WiggleBin Temperature",
+            f"{entry.entry_id}_temperature",
+            f"{entry.title} Temperature",
             "temperature",
             SensorDeviceClass.TEMPERATURE,
         ),
         WiggleBinSensor(
             coordinator,
-            "wigglebin_humidity",
-            "WiggleBin Humidity",
+            f"{entry.entry_id}_humidity",
+            f"{entry.title} Humidity",
             "humidity",
             SensorDeviceClass.HUMIDITY,
         ),

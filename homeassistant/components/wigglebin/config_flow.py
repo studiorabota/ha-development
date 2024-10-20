@@ -12,6 +12,9 @@ from homeassistant.core import callback
 
 from .const import DOMAIN
 
+DEFAULT_NAME = "WiggleBin"
+DEFAULT_API_URL = "http://wigglebin.local:5000"
+
 
 class WiggleBinConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for WiggleBin."""
@@ -23,11 +26,16 @@ class WiggleBinConfigFlow(ConfigFlow, domain=DOMAIN):
         errors: dict = {}
         if user_input is not None:
             # Validate user input here if necessary
-            return self.async_create_entry(title="WiggleBin", data=user_input)
+            return self.async_create_entry(title=user_input["name"], data=user_input)
 
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema({}),
+            data_schema=vol.Schema(
+                {
+                    vol.Required("name", default=DEFAULT_NAME): str,
+                    vol.Required("api_url", default=DEFAULT_API_URL): str,
+                }
+            ),
             errors=errors,
         )
 
