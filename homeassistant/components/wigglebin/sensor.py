@@ -38,7 +38,104 @@ async def async_setup_entry(
             "humidity",
             SensorDeviceClass.HUMIDITY,
         ),
-        # Add more sensors as needed
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_pressure",
+            f"{entry.title} Pressure",
+            "pressure",
+            SensorDeviceClass.PRESSURE,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_soil_temperature",
+            f"{entry.title} Soil Temperature",
+            "soil_temperature",
+            SensorDeviceClass.TEMPERATURE,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_soil_moisture",
+            f"{entry.title} Soil Moisture",
+            "soil_moisture",
+            SensorDeviceClass.MOISTURE,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_soil_adc",
+            f"{entry.title} Soil ADC",
+            "soil_adc",
+            SensorDeviceClass.MOISTURE,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_image_mean_gray",
+            f"{entry.title} Image Mean Gray",
+            "image_mean_gray",
+            SensorDeviceClass.ILLUMINANCE,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_image_pixels_darker",
+            f"{entry.title} Image Pixels Shifted To Dark",
+            "image_pixels_darker",
+            SensorDeviceClass.ILLUMINANCE,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_image_pixels_lighter",
+            f"{entry.title} Image Pixels Shifted To Light",
+            "image_pixels_lighter",
+            SensorDeviceClass.ILLUMINANCE,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_worm_count",
+            f"{entry.title} Worm Count",
+            "worm_count",
+            None,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_fly_count",
+            f"{entry.title} Fly Count",
+            "fly_count",
+            None,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_fly_larva_count",
+            f"{entry.title} Fly Larva Count",
+            "fly_larva_count",
+            None,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_detection_confidence_avg",
+            f"{entry.title} Detection Confidence Average",
+            "detection_confidence_avg",
+            None,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_detection_confidence_min",
+            f"{entry.title} Detection Confidence Min",
+            "detection_confidence_min",
+            None,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_detection_confidence_max",
+            f"{entry.title} Detection Confidence Max",
+            "detection_confidence_max",
+            None,
+        ),
+        WiggleBinSensor(
+            coordinator,
+            f"{entry.entry_id}_detection_count",
+            f"{entry.title} Detection Count",
+            "detection_count",
+            None,
+        ),
     ]
 
     async_add_entities(sensors, True)
@@ -48,7 +145,12 @@ class WiggleBinSensor(SensorEntity):
     """Representation of a Sensor."""
 
     def __init__(
-        self, coordinator, sensor_id, name, attribute, device_class: SensorDeviceClass
+        self,
+        coordinator,
+        sensor_id,
+        name,
+        attribute,
+        device_class: SensorDeviceClass | None,
     ) -> None:
         """Initialize the sensor."""
         self.coordinator = coordinator
@@ -88,7 +190,7 @@ class WiggleBinSensor(SensorEntity):
         return self.coordinator.last_update_success
 
     @property
-    def device_class(self) -> SensorDeviceClass:
+    def device_class(self) -> SensorDeviceClass | None:
         """Return the device class of the sensor."""
         return self._device_class
 
