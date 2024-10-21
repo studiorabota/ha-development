@@ -25,7 +25,8 @@ class WiggleBinDataUpdateCoordinator(DataUpdateCoordinator):
             hass,
             _LOGGER,
             name="WiggleBin",
-            update_interval=timedelta(minutes=1),
+            update_interval=timedelta(minutes=5),
+            update_method=self._async_update_data,
         )
         self.api_url = api_url
 
